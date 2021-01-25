@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using FluentValidation;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -13,8 +14,8 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
-            public Guid Id { get; set; } 
-            
+            public Guid Id { get; set; }
+
             public string Title { get; set; }
 
             public string Description { get; set; }
@@ -25,7 +26,7 @@ namespace Application.Activities
 
             public string Venue { get; set; }
 
-            public int ActivityID {get; set; }
+            public int ActivityID { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -45,8 +46,10 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
             }
 
@@ -66,17 +69,20 @@ namespace Application.Activities
                     new SqlParameter("@pDate", request.Date),
                     new SqlParameter("@pCity", request.City),
                     new SqlParameter("@pVenue", request.Venue),
+                    new SqlParameter("@AppUser", _userAccessor.GetCurrentUsername()),
+                    new SqlParameter("@IsHost", true),
+                    new SqlParameter("@DateJoined", DateTime.Now),                    
                     new SqlParameter("@pActivityID",System.Data.SqlDbType.Int){Direction = System.Data.ParameterDirection.Output}
                 };
 
-                var rtnStatus = await _context.Database.ExecuteSqlRawAsync("uspCreateActivity  {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} OUT", param);
+                var rtnStatus = await _context.Database.ExecuteSqlRawAsync("uspCreateActivity  {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10} OUT", param);
                 // Console.WriteLine(rtnStatus);
                 // Console.WriteLine(param[7].Value);
 
                 if (rtnStatus != 0) return Unit.Value;
 
                 throw new Exception("Problem saving changes");
-                
+
             }
         }
     }
