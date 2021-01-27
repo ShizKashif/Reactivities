@@ -18,14 +18,14 @@ export default class CommonStore {
         )
     }
 
-   @observable token: string | null = window.localStorage.getItem('jwt');
-   @observable appLoaded = false;
+    @observable token: string | null = window.localStorage.getItem('jwt');
+    @observable appLoaded = false;
 
-   @action setToken = (token: string | null) => {
+    @action setToken = (token: string | null) => {
         this.token = token;
-     }
+    }
 
     @action setAppLoaded = () => {
-         this.appLoaded = true;
+        this.appLoaded = true;
     }
 }

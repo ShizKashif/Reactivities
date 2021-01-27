@@ -12,7 +12,7 @@ export class RootStore {
     userStore: UserStore;
     commonStore: CommonStore;
     modalStore: ModalStore;
- 
+
     constructor() {
         this.activityStore = new ActivityStore(this);
         this.userStore = new UserStore(this);

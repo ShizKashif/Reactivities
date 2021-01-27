@@ -69,13 +69,14 @@ namespace Application.Activities
                     new SqlParameter("@pDate", request.Date),
                     new SqlParameter("@pCity", request.City),
                     new SqlParameter("@pVenue", request.Venue),
-                    new SqlParameter("@AppUser", _userAccessor.GetCurrentUsername()),
-                    new SqlParameter("@IsHost", true),
-                    new SqlParameter("@DateJoined", DateTime.Now),                    
-                    new SqlParameter("@pActivityID",System.Data.SqlDbType.Int){Direction = System.Data.ParameterDirection.Output}
+                    new SqlParameter("@pActivityID",System.Data.SqlDbType.Int){Direction = System.Data.ParameterDirection.Output},
+                    new SqlParameter("@puserName", _userAccessor.GetCurrentUsername()),
+                    new SqlParameter("@pIsHost", true),
+                    new SqlParameter("@pDateJoined", DateTime.Now)                   
+                    
                 };
 
-                var rtnStatus = await _context.Database.ExecuteSqlRawAsync("uspCreateActivity  {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10} OUT", param);
+                var rtnStatus = await _context.Database.ExecuteSqlRawAsync("uspCreateActivity  {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} OUT, {8}, {9}, {10}", param);
                 // Console.WriteLine(rtnStatus);
                 // Console.WriteLine(param[7].Value);
 

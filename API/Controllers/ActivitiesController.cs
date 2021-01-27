@@ -47,7 +47,6 @@ namespace API.Controllers
         }
 
         [HttpPost("{id}/attend")]
-         [Authorize(Policy = "IsActivityHost")]
         public async Task<ActionResult<Unit>> Attend(Guid id)
         {
          return await Mediator.Send(new Attend.Command{Id = id});   
