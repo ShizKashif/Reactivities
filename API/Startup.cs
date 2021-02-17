@@ -89,6 +89,7 @@ namespace API
             });
 
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+            
             var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => 
